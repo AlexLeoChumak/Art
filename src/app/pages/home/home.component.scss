@@ -1,4 +1,19 @@
 .featured-section {
-  padding: 0 130px 130px 130px;
+  padding: 0 130px 30px;
   background-color: var(--primary-color);
+}
+.no-post {
+  color: var(--navbar-footer-color);
+  font-size: 1.5rem;
+}
+
+@media (max-width: 828px) {
+  .featured-section {
+    padding: 0 50px 30px;
+  }
+}
+@media (max-width: 635px) {
+  .featured-section {
+    padding: 30px 0;
+  }
 }

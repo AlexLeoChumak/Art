@@ -3,6 +3,7 @@ import { Subscription, catchError, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { PostsService } from 'src/app/services/posts.service';
+import { Post } from 'src/app/models/post';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +11,11 @@ import { PostsService } from 'src/app/services/posts.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  loadPostsSub!: Subscription;
+  private loadFeaturedPostsSub!: Subscription;
+  private loadLatestPostsSub!: Subscription;
+  allPosts!: Post[];
+  featuredPosts!: Post[];
+  latestPosts!: Post[];
 
   constructor(
     private postsService: PostsService,
@@ -18,8 +23,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.loadPostsSub = this.postsService
-      .loadPosts()
+    this.loadFeaturedPostsSub = this.postsService
+      .loadFeaturedPosts()
       .pipe(
         catchError((err) => {
           return throwError(() => err);
@@ -27,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (data) => {
-          console.log(data);
+          this.featuredPosts = data;
         },
         error: (err) => {
           this.toastr.error(err);
@@ -36,8 +41,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.loadPostsSub) {
-      this.loadPostsSub.unsubscribe();
+    if (this.loadFeaturedPostsSub) {
+      this.loadFeaturedPostsSub.unsubscribe();
+    }
+    if (this.loadLatestPostsSub) {
+      this.loadLatestPostsSub.unsubscribe();
     }
   }
 }
