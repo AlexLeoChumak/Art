@@ -3,8 +3,12 @@ import {
   DocumentSnapshot,
   Firestore,
   FirestoreError,
+  Query,
   collection,
+  limit,
   onSnapshot,
+  query,
+  where,
 } from '@angular/fire/firestore';
 import { Observable, Subscriber, finalize } from 'rxjs';
 import { Post } from '../models/post';
@@ -13,17 +17,37 @@ import { Post } from '../models/post';
   providedIn: 'root',
 })
 export class PostsService {
-  categoriesCollection = collection(this.fs, 'posts');
+  private postsCollection = collection(this.fs, 'posts');
 
   constructor(private fs: Firestore) {}
 
-  loadPosts(): Observable<Post[]> {
-    // метод загружает все посты из коллекции Firestore
+  loadAllPosts(): Observable<Post[]> {
+    return this.loadPostsFromQuery(this.postsCollection);
+  }
+
+  loadFeaturedPosts(): Observable<Post[]> {
+    const postsFeaturedCollection = query(
+      this.postsCollection,
+      where('isFeatured', '==', true),
+      limit(4)
+    );
+
+    return this.loadPostsFromQuery(postsFeaturedCollection);
+  }
+
+  // loadLatestPosts(): Observable<Post[]> {
+  //   const postsLimitCollection = query(this.postsCollection);
+
+  //   return this.loadPostsFromQuery(postsLimitCollection);
+  // }
+
+  private loadPostsFromQuery(query: Query): Observable<Post[]> {
+    // метод загружает посты по фильтру из коллекции Firestore
     let unsubscribe: () => void;
 
     return new Observable((observer: Subscriber<Post[]>) => {
       unsubscribe = onSnapshot(
-        this.categoriesCollection,
+        query,
         (snapshot) => {
           const data = snapshot.docs.map(
             (docSnapshot: DocumentSnapshot<any>) => {
