@@ -7,6 +7,7 @@ import {
   collection,
   limit,
   onSnapshot,
+  orderBy,
   query,
   where,
 } from '@angular/fire/firestore';
@@ -35,11 +36,14 @@ export class PostsService {
     return this.loadPostsFromQuery(postsFeaturedCollection);
   }
 
-  // loadLatestPosts(): Observable<Post[]> {
-  //   const postsLimitCollection = query(this.postsCollection);
+  loadLatestPosts(): Observable<Post[]> {
+    const postsLimitCollection = query(
+      this.postsCollection,
+      orderBy('createdAt')
+    );
 
-  //   return this.loadPostsFromQuery(postsLimitCollection);
-  // }
+    return this.loadPostsFromQuery(postsLimitCollection);
+  }
 
   private loadPostsFromQuery(query: Query): Observable<Post[]> {
     // метод загружает посты по фильтру из коллекции Firestore
