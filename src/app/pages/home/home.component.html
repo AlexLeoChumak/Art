@@ -1,26 +1,28 @@
 <section class="featured-section">
   <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12 text-center mt-5 mb-3">
-        <h2 class="text-white">Featured Posts</h2>
-        <p class="text-white">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit rerum
-          nulla animi, voluptatibus iusto exercitationem! Dolore aut corporis
-          facilis, vero beatae quos quae corrupti hic voluptatum officiis!
-          Ullam, iure corporis.
-        </p>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 text-center mt-5 mb-3">
+          <h2 class="text-white">Featured Posts</h2>
+          <p class="text-white">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit rerum
+            nulla animi, voluptatibus iusto exercitationem! Dolore aut corporis
+            facilis, vero beatae quos quae corrupti hic voluptatum officiis!
+            Ullam, iure corporis.
+          </p>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div class="col-lg-3" *ngFor="let post of featuredPosts">
-        <app-post-card [post]="post"></app-post-card>
-      </div>
-      <div
-        class="d-flex justify-content-center col-lg-12"
-        *ngIf="!featuredPosts?.length"
-      >
-        <span class="no-post">No posts</span>
+      <div class="row">
+        <div class="col-lg-3" *ngFor="let post of featuredPosts">
+          <app-post-card [post]="post"></app-post-card>
+        </div>
+        <div
+          class="d-flex justify-content-center col-lg-12"
+          *ngIf="!featuredPosts?.length"
+        >
+          <span class="no-post">No posts</span>
+        </div>
       </div>
     </div>
   </div>

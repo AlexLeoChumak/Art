@@ -38,6 +38,22 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.toastr.error(err);
         },
       });
+
+    this.loadLatestPostsSub = this.postsService
+      .loadLatestPosts()
+      .pipe(
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      )
+      .subscribe({
+        next: (data) => {
+          this.latestPosts = data;
+        },
+        error: (err) => {
+          this.toastr.error(err);
+        },
+      });
   }
 
   ngOnDestroy(): void {
