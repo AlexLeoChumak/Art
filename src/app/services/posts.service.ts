@@ -45,6 +45,15 @@ export class PostsService {
     return this.loadPostsFromQuery(postsLimitCollection);
   }
 
+  loadCategoryPosts(categoryId: string) {
+    const postsCategoryCollection = query(
+      this.postsCollection,
+      where('category.id', '==', categoryId)
+    );
+
+    return this.loadPostsFromQuery(postsCategoryCollection);
+  }
+
   private loadPostsFromQuery(query: Query): Observable<Post[]> {
     // метод загружает посты по фильтру из коллекции Firestore
     let unsubscribe: () => void;
