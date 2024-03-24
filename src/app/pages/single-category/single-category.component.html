@@ -9,23 +9,8 @@
 
 <div class="container mb-5 mt-5">
   <div class="row">
-    <div class="col-md-4 mb-3">
-      <app-post-card></app-post-card>
-    </div>
-    <div class="col-md-4 mb-3">
-      <app-post-card></app-post-card>
-    </div>
-    <div class="col-md-4 mb-3">
-      <app-post-card></app-post-card>
-    </div>
-    <div class="col-md-4 mb-3">
-      <app-post-card></app-post-card>
-    </div>
-    <div class="col-md-4 mb-3">
-      <app-post-card></app-post-card>
-    </div>
-    <div class="col-md-4 mb-3">
-      <app-post-card></app-post-card>
+    <div class="col-md-4 mb-3" *ngFor="let post of categoryPosts">
+      <app-post-card [post]="post"></app-post-card>
     </div>
   </div>
 </div>

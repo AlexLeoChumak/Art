@@ -3,7 +3,7 @@
   max-width: 400px;
   min-height: 500px;
   .card-img-top {
-    object-fit: cover;
-    height: 200px;
+    object-fit: contain;
+    height: 300px;
   }
 }
