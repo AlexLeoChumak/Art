@@ -1,8 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DocumentData } from '@angular/fire/firestore';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, catchError, switchMap, takeUntil, throwError } from 'rxjs';
+import {
+  Subject,
+  Subscription,
+  catchError,
+  switchMap,
+  takeUntil,
+  tap,
+  throwError,
+} from 'rxjs';
 import { Post } from 'src/app/models/post';
 import { PostsService } from 'src/app/services/posts.service';
 
@@ -13,7 +21,8 @@ import { PostsService } from 'src/app/services/posts.service';
 })
 export class SinglePostComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
-  post!: DocumentData;
+  post!: DocumentData | Post;
+  similarPosts!: Post[];
 
   constructor(
     private route: ActivatedRoute,
@@ -24,17 +33,16 @@ export class SinglePostComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params
       .pipe(
-        switchMap((data) => {
-          return this.postsService
-            .loadPostById(data['id'])
-            .pipe(catchError((err) => throwError(() => err)));
-        }),
+        switchMap((data) => this.postsService.loadPostById(data['id'])),
+        tap((data) => (data ? (this.post = data) : null)),
+        switchMap((data) =>
+          this.postsService.loadSimilarPosts(data['category'].categoryId)
+        ),
+        catchError((err) => throwError(() => err)),
         takeUntil(this.unsubscribe$)
       )
       .subscribe({
-        next: (data) => {
-          this.post = data;
-        },
+        next: (data) => (data ? (this.similarPosts = data) : null),
         error: (err) => this.toastr.error(err),
       });
   }
