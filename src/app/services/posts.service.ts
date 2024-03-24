@@ -48,7 +48,7 @@ export class PostsService {
   loadCategoryPosts(categoryId: string) {
     const postsCategoryCollection = query(
       this.postsCollection,
-      where('category.id', '==', categoryId)
+      where('category.categoryId', '==', categoryId)
     );
 
     return this.loadPostsFromQuery(postsCategoryCollection);
