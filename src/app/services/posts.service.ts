@@ -1,17 +1,28 @@
 import { Injectable } from '@angular/core';
 import {
+  DocumentData,
   DocumentSnapshot,
   Firestore,
   FirestoreError,
   Query,
   collection,
+  doc,
+  getDoc,
   limit,
   onSnapshot,
   orderBy,
   query,
   where,
 } from '@angular/fire/firestore';
-import { Observable, Subscriber, finalize } from 'rxjs';
+import {
+  Observable,
+  Subscriber,
+  catchError,
+  finalize,
+  from,
+  map,
+  throwError,
+} from 'rxjs';
 import { Post } from '../models/post';
 
 @Injectable({
@@ -24,6 +35,24 @@ export class PostsService {
 
   loadAllPosts(): Observable<Post[]> {
     return this.loadPostsFromQuery(this.postsCollection);
+  }
+
+  loadPostById(id: string): Observable<DocumentData> {
+    return from(getDoc(doc(this.fs, `posts/${id}`))).pipe(
+      map((docSnapshot) => {
+        const data = docSnapshot.data();
+
+        if (!data) {
+          return throwError(() => `No data`);
+        }
+
+        return data;
+      }),
+      catchError((err: FirestoreError) => {
+        console.error(`Error: ${err}`);
+        return throwError(() => `Data getting error. Please try again`);
+      })
+    );
   }
 
   loadFeaturedPosts(): Observable<Post[]> {
