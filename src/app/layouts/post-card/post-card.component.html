@@ -4,9 +4,11 @@
     <small class="bg-light text-danger text-center">{{
       post.category.category
     }}</small>
-    <small class="bg-light text-success text-center ml-3">{{
-      post.isFeatured
-    }}</small>
+    <small
+      *ngIf="post.isFeatured"
+      class="bg-light text-success text-center ml-3"
+      >Featured
+    </small>
     <small class="bg-light text-info text-center ml-3">{{ post.views }}</small>
 
     <h5 class="mt-1">{{ post.title }}</h5>
