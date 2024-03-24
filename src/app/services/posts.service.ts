@@ -65,6 +65,16 @@ export class PostsService {
     return this.loadPostsFromQuery(postsFeaturedCollection);
   }
 
+  loadSimilarPosts(categoryId: string) {
+    const postsSimilarCollection = query(
+      this.postsCollection,
+      where('category.categoryId', '==', categoryId),
+      limit(4)
+    );
+
+    return this.loadPostsFromQuery(postsSimilarCollection);
+  }
+
   loadLatestPosts(): Observable<Post[]> {
     const postsLimitCollection = query(
       this.postsCollection,
