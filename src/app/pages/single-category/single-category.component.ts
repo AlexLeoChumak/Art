@@ -1,14 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import {
-  Subject,
-  catchError,
-  switchMap,
-  takeUntil,
-  tap,
-  throwError,
-} from 'rxjs';
+import { Subject, catchError, switchMap, takeUntil, throwError } from 'rxjs';
+import { Category } from 'src/app/models/category';
 import { Post } from 'src/app/models/post';
 import { PostsService } from 'src/app/services/posts.service';
 
@@ -20,6 +14,7 @@ import { PostsService } from 'src/app/services/posts.service';
 export class SingleCategoryComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   categoryPosts!: Post[];
+  categoryDataFromParams!: Params;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,10 +26,11 @@ export class SingleCategoryComponent implements OnInit, OnDestroy {
     this.route.params
       .pipe(
         switchMap((data) => {
-          return this.postsService.loadCategoryPosts(data['id']).pipe(
-            tap((val) => console.log('val', val)),
-            catchError((err) => throwError(() => err))
-          );
+          this.categoryDataFromParams = data;
+
+          return this.postsService
+            .loadCategoryPosts(data['id'])
+            .pipe(catchError((err) => throwError(() => err)));
         }),
         takeUntil(this.unsubscribe$)
       )
