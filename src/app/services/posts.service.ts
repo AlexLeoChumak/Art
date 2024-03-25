@@ -8,12 +8,15 @@ import {
   collection,
   doc,
   getDoc,
+  increment,
   limit,
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
   where,
 } from '@angular/fire/firestore';
+
 import {
   Observable,
   Subscriber,
@@ -21,8 +24,10 @@ import {
   finalize,
   from,
   map,
+  tap,
   throwError,
 } from 'rxjs';
+
 import { Post } from '../models/post';
 
 @Injectable({
@@ -38,7 +43,7 @@ export class PostsService {
   }
 
   loadPostById(id: string): Observable<DocumentData> {
-    return from(getDoc(doc(this.fs, `posts/${id}`))).pipe(
+    return from(getDoc(doc(this.postsCollection, id))).pipe(
       map((docSnapshot) => {
         const data = docSnapshot.data();
 
@@ -123,6 +128,19 @@ export class PostsService {
         if (unsubscribe) {
           unsubscribe();
         }
+      })
+    );
+  }
+
+  countViews(postId: string) {
+    const viewCount = {
+      views: increment(1),
+    };
+
+    return from(updateDoc(doc(this.postsCollection, postId), viewCount)).pipe(
+      catchError((err) => {
+        console.error(`Error: ${err}`);
+        return throwError(() => `Data update error. Please try again`);
       })
     );
   }
