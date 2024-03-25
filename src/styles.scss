@@ -5,6 +5,7 @@
   --secondary-color: #e5f5ea;
   --body-text-color: #596392;
   --navbar-footer-color: #f9f9f9;
+  --error: red;
 }
 
 body {
@@ -47,6 +48,16 @@ input[type="email"] {
   padding-left: 20px;
   font-size: 13px;
   width: 100%;
+}
+.invalid {
+  color: var(--error);
+  div {
+    position: absolute;
+    top: 65px;
+    span {
+      font-size: 1rem;
+    }
+  }
 }
 
 .btn-theme {

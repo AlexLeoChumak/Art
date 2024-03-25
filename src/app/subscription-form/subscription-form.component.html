@@ -8,20 +8,75 @@
         error quo ullam dignissimos fuga maxime cumque aperiam expedita.
       </p>
 
-      <form action="" class="form-inline mb-5 mt-5">
-        <div class="form-group col-md-5">
+      <form
+        [formGroup]="subscriptionForm"
+        (ngSubmit)="submit()"
+        class="form-inline mb-5 mt-5"
+      >
+        <div
+          class="form-group col-md-5"
+          [ngClass]="{
+            invalid:
+              subscriptionForm.get('name')?.touched &&
+              subscriptionForm.get('name')?.invalid
+          }"
+        >
           <input
+            formControlName="name"
             type="text"
-            class="form-control shadow-effect"
             placeholder="Your Name"
-          />
-        </div>
-        <div class="form-group col-md-5">
-          <input
-            type="email"
             class="form-control shadow-effect"
-            placeholder="Email Address"
+            [ngClass]="{
+              'is-invalid':
+                subscriptionForm.get('name')?.touched &&
+                subscriptionForm.get('name')?.invalid
+            }"
           />
+
+          <div
+            *ngIf="
+              subscriptionForm.get('name')?.touched &&
+              subscriptionForm.get('name')?.invalid
+            "
+          >
+            <span *ngIf="subscriptionForm.get('name')?.errors?.['required']"
+              >Enter the name</span
+            >
+          </div>
+        </div>
+        <div
+          class="form-group col-md-5"
+          [ngClass]="{
+            invalid:
+              subscriptionForm.get('email')?.touched &&
+              subscriptionForm.get('email')?.invalid
+          }"
+        >
+          <input
+            formControlName="email"
+            type="email"
+            placeholder="Email Address"
+            class="form-control shadow-effect"
+            [ngClass]="{
+              'is-invalid':
+                subscriptionForm.get('email')?.touched &&
+                subscriptionForm.get('email')?.invalid
+            }"
+          />
+
+          <div
+            *ngIf="
+              subscriptionForm.get('email')?.touched &&
+              subscriptionForm.get('email')?.invalid
+            "
+          >
+            <span *ngIf="subscriptionForm.get('email')?.errors?.['required']"
+              >Enter the email</span
+            >
+            <span *ngIf="subscriptionForm.get('email')?.errors?.['email']"
+              >Enter the valid email</span
+            >
+          </div>
         </div>
 
         <div class="col-md-2">
