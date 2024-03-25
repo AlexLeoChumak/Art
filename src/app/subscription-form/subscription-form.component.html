@@ -25,7 +25,7 @@
             formControlName="name"
             type="text"
             placeholder="Your Name"
-            class="form-control shadow-effect"
+            class="form-control"
             [ngClass]="{
               'is-invalid':
                 subscriptionForm.get('name')?.touched &&
@@ -56,7 +56,7 @@
             formControlName="email"
             type="email"
             placeholder="Email Address"
-            class="form-control shadow-effect"
+            class="form-control"
             [ngClass]="{
               'is-invalid':
                 subscriptionForm.get('email')?.touched &&
@@ -80,7 +80,13 @@
         </div>
 
         <div class="col-md-2">
-          <button class="btn btn-info btn-block btn-theme">SUBSCRIBE</button>
+          <button
+            [disabled]="subscriptionForm.invalid"
+            class="btn btn-info btn-block btn-theme"
+            type="submit"
+          >
+            SUBSCRIBE
+          </button>
         </div>
       </form>
     </div>
