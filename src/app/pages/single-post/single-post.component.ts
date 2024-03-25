@@ -6,6 +6,9 @@ import {
   Subject,
   Subscription,
   catchError,
+  forkJoin,
+  map,
+  mergeMap,
   switchMap,
   takeUntil,
   tap,
@@ -33,16 +36,25 @@ export class SinglePostComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.params
       .pipe(
-        switchMap((data) => this.postsService.loadPostById(data['id'])),
-        tap((data) => (data ? (this.post = data) : null)),
-        switchMap((data) =>
-          this.postsService.loadSimilarPosts(data['category'].categoryId)
+        mergeMap((params) =>
+          this.postsService.countViews(params['id']).pipe(
+            map(() => params['id']) // Возвращаю id для следующего шага в цепочке
+          )
+        ),
+        switchMap((id) => this.postsService.loadPostById(id)),
+        tap((post) => {
+          this.post = post;
+        }),
+        switchMap((post) =>
+          this.postsService.loadSimilarPosts(post['category'].categoryId)
         ),
         catchError((err) => throwError(() => err)),
         takeUntil(this.unsubscribe$)
       )
       .subscribe({
-        next: (data) => (data ? (this.similarPosts = data) : null),
+        next: (data) => {
+          this.similarPosts = data;
+        },
         error: (err) => this.toastr.error(err),
       });
   }

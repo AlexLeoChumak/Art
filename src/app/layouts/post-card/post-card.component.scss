@@ -5,7 +5,7 @@
   transition: 0.3s;
   cursor: pointer;
   &:hover {
-    box-shadow: 0px 0px 33px -10px var(--primary-color);
+    box-shadow: 0px 0px 33px -10px rgb(149, 149, 149);
   }
   .card-img-top {
     object-fit: contain;
