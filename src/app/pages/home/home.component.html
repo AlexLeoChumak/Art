@@ -40,5 +40,12 @@
     <div class="col-md-4 mt-3" *ngFor="let post of latestPosts">
       <app-post-card [post]="post"></app-post-card>
     </div>
+
+    <div
+      class="d-flex justify-content-center col-lg-12"
+      *ngIf="!latestPosts?.length"
+    >
+      <span class="no-post">No posts</span>
+    </div>
   </div>
 </section>
