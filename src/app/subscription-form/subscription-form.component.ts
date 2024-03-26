@@ -4,6 +4,7 @@ import { UpdateSubscriber } from '../models/update-subscriber';
 import { SubscribersService } from '../services/subscribers.service';
 import { Subscription, catchError, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { DocumentReference } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-subscription-form',
@@ -39,9 +40,14 @@ export class SubscriptionFormComponent implements OnInit, OnDestroy {
       .addSubscriber(subscriptionFormData)
       .pipe(catchError((err) => throwError(() => err)))
       .subscribe({
-        next: () => {
+        next: (data) => {
           this.subscriptionForm.reset();
-          this.toastr.success('You have successfully subscribed to updates');
+
+          if (data instanceof DocumentReference) {
+            this.toastr.success('You have successfully subscribed to updates');
+          } else {
+            this.toastr.warning(data);
+          }
         },
         error: (err) => this.toastr.error(err),
       });
