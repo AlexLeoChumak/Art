@@ -2,38 +2,47 @@
   <div class="card-body">
     <h4 class="mt-3 mb-3">Comments</h4>
 
-    <div class="comment-box mt-3">
+    <div *ngFor="let comment of comments" class="comment-box mt-3">
       <h6 class="mb-0">John Doe</h6>
-      <small class="text-danger">LAST UPDATE - SEP 20.2024</small>
+      <small class="text-danger"
+        >LAST UPDATE - {{ comment.createdAt | date }}</small
+      >
 
       <p class="mt-3 mb-3">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore nemo
-        laborum aliquid a maiores eligendi minima rerum, molestias, ut
-        voluptatum voluptatem est odit quibusdam labore esse omnis odio. Ab,
-        velit!
+        {{ comment.comment }}
       </p>
 
-      <a href="#" class="mt-1">Reply</a>
-      <a href="#" class="mt-1 ml-3">View Reply</a>
+      <button
+        class="btn btn-primary mt-1"
+        (click)="
+          comment.isVisibleReplyCommentForm = !comment.isVisibleReplyCommentForm
+        "
+      >
+        Reply
+      </button>
+      <div *ngIf="comment.isVisibleReplyCommentForm">
+        <app-comment-form [idComment]="comment.id"></app-comment-form>
+      </div>
 
-      <hr />
-    </div>
+      <button
+        *ngIf="!comment.isVisibleReplyCommentForm"
+        class="btn btn-primary mt-1 ml-3"
+        (click)="
+          comment.isVisibleReplyComments = !comment.isVisibleReplyComments
+        "
+      >
+        View Reply
+      </button>
 
-    <div class="comment-box mt-3">
-      <h6 class="mb-0">John Doe</h6>
-      <small class="text-danger">LAST UPDATE - SEP 20.2024</small>
+      <div
+        *ngIf="comment.isVisibleReplyComments"
+        class="comment-box reply-comment-box mt-3"
+      >
+        <h6 class="mb-0">1111</h6>
+        <small class="text-danger">LAST UPDATE - </small>
 
-      <p class="mt-3 mb-3">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore nemo
-        laborum aliquid a maiores eligendi minima rerum, molestias, ut
-        voluptatum voluptatem est odit quibusdam labore esse omnis odio. Ab,
-        velit!
-      </p>
-
-      <a href="#" class="mt-1">Reply</a>
-      <a href="#" class="mt-1 ml-3">View Reply</a>
-
-      <hr />
+        <p class="mt-3 mb-3">hjgjhgj</p>
+      </div>
     </div>
   </div>
 </div>

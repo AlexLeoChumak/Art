@@ -72,13 +72,11 @@ input[type="email"] {
   width: 100%;
 }
 .invalid {
-  color: var(--error);
-  div {
-    position: absolute;
-    top: 65px;
-    span {
-      font-size: 1rem;
-    }
+  span {
+    display: block;
+    margin: 10px 0 0;
+    font-size: 1rem;
+    color: var(--error);
   }
 }
 

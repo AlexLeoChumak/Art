@@ -38,7 +38,7 @@ export class PostsService {
   constructor(private fs: Firestore) {}
 
   loadAllPosts(): Observable<Post[]> {
-    return this.loadPostsFromQuery(this.postsCollection);
+    return this.loadDataFromQuery(this.postsCollection);
   }
 
   loadPostById(id: string): Observable<DocumentData> {
@@ -66,7 +66,7 @@ export class PostsService {
       limit(4)
     );
 
-    return this.loadPostsFromQuery(postsFeaturedCollection);
+    return this.loadDataFromQuery(postsFeaturedCollection);
   }
 
   loadSimilarPosts(categoryId: string) {
@@ -76,7 +76,7 @@ export class PostsService {
       limit(4)
     );
 
-    return this.loadPostsFromQuery(postsSimilarCollection);
+    return this.loadDataFromQuery(postsSimilarCollection);
   }
 
   loadLatestPosts(): Observable<Post[]> {
@@ -85,7 +85,7 @@ export class PostsService {
       orderBy('createdAt')
     );
 
-    return this.loadPostsFromQuery(postsLimitCollection);
+    return this.loadDataFromQuery(postsLimitCollection);
   }
 
   loadCategoryPosts(categoryId: string) {
@@ -94,10 +94,10 @@ export class PostsService {
       where('category.categoryId', '==', categoryId)
     );
 
-    return this.loadPostsFromQuery(postsCategoryCollection);
+    return this.loadDataFromQuery(postsCategoryCollection);
   }
 
-  private loadPostsFromQuery(query: Query): Observable<Post[]> {
+  private loadDataFromQuery(query: Query): Observable<Post[]> {
     // метод загружает посты по фильтру из коллекции Firestore
     let unsubscribe: () => void;
 

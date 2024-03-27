@@ -2,10 +2,17 @@
   background-color: var(--secondary-color);
   width: 1200px;
 
-  input[type="text"],
-  input[type="email"] {
-    width: 100%;
+  .form-inline {
+    display: flex;
+    .form-control {
+      width: 100%;
+      align-self: flex-start;
+    }
+    .btn-info {
+      margin: 0 auto;
+    }
   }
+
   .subs-text {
     width: 500px;
   }
