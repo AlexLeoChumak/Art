@@ -6,6 +6,7 @@ import {
   FirestoreError,
   Query,
   collection,
+  collectionData,
   doc,
   getDoc,
   increment,
@@ -28,6 +29,7 @@ import {
 } from 'rxjs';
 
 import { Post } from '../models/post';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -35,27 +37,37 @@ import { Post } from '../models/post';
 export class PostsService {
   private postsCollection = collection(this.fs, 'posts');
 
-  constructor(private fs: Firestore) {}
+  constructor(private fs: Firestore, private router: Router) {}
 
   loadAllPosts(): Observable<Post[]> {
     return this.loadDataFromQuery(this.postsCollection);
   }
 
   loadPostById(id: string): Observable<DocumentData> {
-    return from(getDoc(doc(this.postsCollection, id))).pipe(
-      map((docSnapshot) => {
-        const data = docSnapshot.data();
+    // Получаем документ из Firestore и отслеживаем его изменения
+    return new Observable<DocumentData>(
+      (observer: Subscriber<DocumentData>) => {
+        const unsubscribe = onSnapshot(
+          doc(this.postsCollection, id),
+          (docSnapshot) => {
+            const data = docSnapshot.data();
 
-        if (!data) {
-          return throwError(() => `No data`);
-        }
+            if (!data) {
+              observer.error(new Error('Data getting error. Please try again'));
+              this.router.navigate(['/']);
+            } else {
+              observer.next(data);
+            }
+          },
+          (error) => {
+            console.error(`Error: ${error}`);
+          }
+        );
 
-        return data;
-      }),
-      catchError((err: FirestoreError) => {
-        console.error(`Error: ${err}`);
-        return throwError(() => `Data getting error. Please try again`);
-      })
+        return () => {
+          unsubscribe();
+        };
+      }
     );
   }
 
@@ -98,37 +110,30 @@ export class PostsService {
   }
 
   private loadDataFromQuery(query: Query): Observable<Post[]> {
-    // метод загружает посты по фильтру из коллекции Firestore
-    let unsubscribe: () => void;
-
-    return new Observable((observer: Subscriber<Post[]>) => {
-      unsubscribe = onSnapshot(
+    return new Observable<Post[]>((observer) => {
+      const unsubscribe = onSnapshot(
         query,
         (snapshot) => {
-          const data = snapshot.docs.map(
-            (docSnapshot: DocumentSnapshot<any>) => {
-              const docData = docSnapshot.data();
-              const id = docSnapshot.id;
+          const posts: any[] = snapshot.docs.map((doc) => {
+            const docData = doc.data();
+            const id = doc.id;
+            return docData ? { id, ...docData } : null;
+          });
 
-              return docData ? { id, ...docData } : null;
-            }
-          );
-          observer.next(data);
+          observer.next(posts);
         },
-        (err: FirestoreError) => {
-          console.error(`Error: ${err}`);
+        (error) => {
+          console.error(`Error: ${error}`);
           observer.error(
-            `An error occurred while loading data. Please try again`
+            'An error occurred while loading data. Please try again'
           );
         }
       );
-    }).pipe(
-      finalize(() => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      })
-    );
+
+      return () => {
+        unsubscribe();
+      };
+    });
   }
 
   countViews(postId: string) {
