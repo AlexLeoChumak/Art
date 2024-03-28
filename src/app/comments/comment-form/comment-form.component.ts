@@ -23,9 +23,11 @@ import { CommentsService } from 'src/app/services/comments.service';
 })
 export class CommentFormComponent implements OnInit, OnDestroy {
   private saveCommentSub!: Subscription;
+  private loadCommentSub!: Subscription;
   private queryParamsSub!: Subscription;
   commentForm!: FormGroup;
   postId!: string;
+  isVisibleReplyComments: boolean = false;
 
   @Input() idComment!: string;
 
@@ -50,13 +52,19 @@ export class CommentFormComponent implements OnInit, OnDestroy {
     }
 
     if (this.idComment) {
-      this.commentsService
+      this.loadCommentSub = this.commentsService
         .loadCommentById('id', this.idComment)
         .pipe(
           take(1),
           switchMap((data: Comment[]) => {
             return data.map((comment) => {
-              comment.replyComments.push(this.commentForm.value.comment);
+              comment.replyComments.push({
+                comment: this.commentForm.value.comment,
+                createdAt: new Date().getTime(),
+                author: 'Vasya',
+              });
+
+              comment.isVisibleReplyComments = true;
               return comment;
             });
           }),
@@ -107,6 +115,7 @@ export class CommentFormComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.saveCommentSub ? this.saveCommentSub.unsubscribe() : null;
+    this.loadCommentSub ? this.loadCommentSub.unsubscribe() : null;
     this.queryParamsSub ? this.queryParamsSub.unsubscribe() : null;
   }
 }
