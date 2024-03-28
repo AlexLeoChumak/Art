@@ -1,28 +1,16 @@
 import { Injectable } from '@angular/core';
 import {
-  DocumentSnapshot,
   Firestore,
   FirestoreError,
-  Query,
-  addDoc,
   collection,
+  collectionData,
   doc,
-  onSnapshot,
   query,
   setDoc,
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import {
-  Observable,
-  Subscriber,
-  catchError,
-  finalize,
-  from,
-  map,
-  switchMap,
-  throwError,
-} from 'rxjs';
+import { Observable, catchError, from, map, throwError } from 'rxjs';
 import { Comment } from '../models/comment';
 import { Post } from '../models/post';
 
@@ -65,41 +53,6 @@ export class CommentsService {
 
   loadCommentById(valueName: string, id: string): Observable<any[]> {
     const comment = query(this.commentsCollection, where(valueName, '==', id));
-
-    return this.loadDataFromQuery(comment);
-  }
-
-  private loadDataFromQuery(query: Query): Observable<Post[]> {
-    // метод загружает посты по фильтру из коллекции Firestore
-    let unsubscribe: () => void;
-
-    return new Observable((observer: Subscriber<Post[]>) => {
-      unsubscribe = onSnapshot(
-        query,
-        (snapshot) => {
-          const data = snapshot.docs.map(
-            (docSnapshot: DocumentSnapshot<any>) => {
-              const docData = docSnapshot.data();
-              const id = docSnapshot.id;
-
-              return docData ? { id, ...docData } : null;
-            }
-          );
-          observer.next(data);
-        },
-        (err: FirestoreError) => {
-          console.error(`Error: ${err}`);
-          observer.error(
-            `An error occurred while loading data. Please try again`
-          );
-        }
-      );
-    }).pipe(
-      finalize(() => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      })
-    );
+    return collectionData(comment);
   }
 }
