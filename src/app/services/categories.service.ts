@@ -6,7 +6,6 @@ import {
   onSnapshot,
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Category } from '../models/category';
 
 @Injectable({
   providedIn: 'root',
@@ -16,16 +15,16 @@ export class CategoriesService {
 
   constructor(private fs: Firestore) {}
 
-  loadData(): Observable<Category[]> {
+  loadData(): Observable<any[]> {
     return new Observable<any[]>((observer) => {
       const unsubscribe = onSnapshot(
         this.categoriesCollection,
         (snapshot) => {
-          const data = snapshot.docs.map((doc) => ({
-            id: doc.id,
+          const posts = snapshot.docs.map((doc) => ({
+            categoryId: doc.id,
             ...doc.data(),
           }));
-          observer.next(data);
+          observer.next(posts);
         },
         (error) => {
           console.error(`Error: ${error}`);
