@@ -28,7 +28,7 @@ export class CategoryNavbarComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (data) => {
-          this.categoryArray = data;
+          data ? (this.categoryArray = data) : null;
         },
         error: (err) => {
           this.toastr.error(err);
@@ -37,8 +37,6 @@ export class CategoryNavbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.loadDataSub) {
-      this.loadDataSub.unsubscribe();
-    }
+    this.loadDataSub ? this.loadDataSub.unsubscribe() : null;
   }
 }
