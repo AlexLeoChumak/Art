@@ -12,7 +12,6 @@ import {
 } from '@angular/fire/firestore';
 import { Observable, catchError, from, map, throwError } from 'rxjs';
 import { Comment } from '../models/comment';
-import { Post } from '../models/post';
 
 @Injectable({
   providedIn: 'root',
