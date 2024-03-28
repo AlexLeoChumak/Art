@@ -6,5 +6,11 @@ export interface Comment {
   createdAt: string;
   isVisibleReplyComments: boolean;
   isVisibleReplyCommentForm: boolean;
-  replyComments: string[];
+  replyComments: ReplyComments[];
+}
+
+interface ReplyComments {
+  comment: string;
+  createdAt: number;
+  author: string;
 }
