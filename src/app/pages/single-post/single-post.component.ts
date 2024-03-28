@@ -4,9 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import {
   Subject,
-  Subscription,
   catchError,
-  forkJoin,
   map,
   mergeMap,
   switchMap,
@@ -55,7 +53,9 @@ export class SinglePostComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.similarPosts = data;
         },
-        error: (err) => this.toastr.error(err),
+        error: (err) => {
+          this.toastr.error(err);
+        },
       });
   }
 
