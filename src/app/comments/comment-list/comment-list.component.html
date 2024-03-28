@@ -2,7 +2,10 @@
   <div class="card-body">
     <h4 class="mt-3 mb-3">Comments</h4>
 
-    <div *ngFor="let comment of comments" class="comment-box mt-3">
+    <div
+      *ngFor="let comment of comments; let i = index"
+      class="comment-box mt-3"
+    >
       <h6 class="mb-0">John Doe</h6>
       <small class="text-danger"
         >LAST UPDATE - {{ comment.createdAt | date }}</small
@@ -18,7 +21,7 @@
           comment.isVisibleReplyCommentForm = !comment.isVisibleReplyCommentForm
         "
       >
-        Reply
+        {{ !comment.isVisibleReplyCommentForm ? "Reply" : "Hide" }}
       </button>
       <div *ngIf="comment.isVisibleReplyCommentForm">
         <app-comment-form [idComment]="comment.id"></app-comment-form>
@@ -30,18 +33,28 @@
         (click)="
           comment.isVisibleReplyComments = !comment.isVisibleReplyComments
         "
+        [disabled]="comment.replyComments.length === 0"
       >
-        View Reply
+        {{
+          comment.replyComments.length > 0 && !comment.isVisibleReplyComments
+            ? "Show"
+            : "Hide"
+        }}
+        Replies
       </button>
 
-      <div
-        *ngIf="comment.isVisibleReplyComments"
-        class="comment-box reply-comment-box mt-3"
-      >
-        <h6 class="mb-0">1111</h6>
-        <small class="text-danger">LAST UPDATE - </small>
+      <div *ngIf="comment.isVisibleReplyComments">
+        <div
+          *ngFor="let replyComment of comment.replyComments"
+          class="comment-box reply-comment-box mt-3"
+        >
+          <h6 class="mb-0">{{ replyComment.author }}</h6>
+          <small class="text-danger"
+            >LAST UPDATE: {{ replyComment.createdAt | date }}</small
+          >
 
-        <p class="mt-3 mb-3">hjgjhgj</p>
+          <p class="mt-3 mb-3">{{ replyComment.comment }}</p>
+        </div>
       </div>
     </div>
   </div>
