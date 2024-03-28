@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
-  DocumentSnapshot,
   Firestore,
-  FirestoreError,
   collection,
+  collectionData,
   onSnapshot,
 } from '@angular/fire/firestore';
-import { Observable, Subscriber, finalize } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Category } from '../models/category';
 
 @Injectable({
@@ -18,36 +17,27 @@ export class CategoriesService {
   constructor(private fs: Firestore) {}
 
   loadData(): Observable<Category[]> {
-    // метод загружает все посты из коллекции Firestore
-    let unsubscribe: () => void;
-
-    return new Observable((observer: Subscriber<Category[]>) => {
-      unsubscribe = onSnapshot(
+    return new Observable<any[]>((observer) => {
+      const unsubscribe = onSnapshot(
         this.categoriesCollection,
         (snapshot) => {
-          const data = snapshot.docs.map(
-            (docSnapshot: DocumentSnapshot<any>) => {
-              const data = docSnapshot.data();
-              const id = docSnapshot.id;
-
-              return data ? { id, ...data } : null;
-            }
-          );
+          const data = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
           observer.next(data);
         },
-        (err: FirestoreError) => {
-          console.error(`Error: ${err}`);
+        (error) => {
+          console.error(`Error: ${error}`);
           observer.error(
-            `An error occurred while loading data. Please try again`
+            'An error occurred while loading data. Please try again'
           );
         }
       );
-    }).pipe(
-      finalize(() => {
-        if (unsubscribe) {
-          unsubscribe();
-        }
-      })
-    );
+
+      return () => {
+        unsubscribe();
+      };
+    });
   }
 }
