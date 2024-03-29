@@ -1,20 +1,25 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import {
+  ActivatedRoute,
+  ActivatedRouteSnapshot,
+  Params,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import {
   Subscription,
   catchError,
-  map,
-  mergeAll,
   of,
   switchMap,
   take,
-  tap,
   throwError,
 } from 'rxjs';
 import { Comment } from 'src/app/models/comment';
+import { AuthGuard } from 'src/app/services/auth.guard';
 import { CommentsService } from 'src/app/services/comments.service';
+import { InputService } from 'src/app/services/input.service';
 
 @Component({
   selector: 'app-comment-form',
@@ -34,7 +39,10 @@ export class CommentFormComponent implements OnInit, OnDestroy {
   constructor(
     private commentsService: CommentsService,
     private toastr: ToastrService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private inputService: InputService,
+    private authGuard: AuthGuard,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +72,6 @@ export class CommentFormComponent implements OnInit, OnDestroy {
                 author: 'Vasya',
               });
 
-              comment.isVisibleReplyComments = true;
               return comment;
             });
           }),
@@ -110,6 +117,27 @@ export class CommentFormComponent implements OnInit, OnDestroy {
             this.toastr.error(err);
           },
         });
+    }
+  }
+
+  onFocus() {
+    this.inputService.setInputState([true, this.router.url]);
+
+    const activatedRouteSnapshot = {} as ActivatedRouteSnapshot;
+    const routerStateSnapshot = {} as RouterStateSnapshot;
+
+    const canActivated = this.authGuard.canActivate(
+      activatedRouteSnapshot,
+      routerStateSnapshot
+    );
+
+    if (!canActivated) {
+      this.router.navigate(['/login']);
+      this.toastr.info('To leave a comment, log in or register');
+      this.inputService.setInputState([false, this.router.url]);
+      return false;
+    } else {
+      return true;
     }
   }
 
