@@ -9,6 +9,7 @@ import { AboutUsComponent } from './pages/about-us/about-us.component';
 import { LoginComponent } from './auth/login/login.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { AuthGuard } from './services/auth.guard';
+import { LoginGuard } from './services/login.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -28,7 +29,7 @@ const routes: Routes = [
     component: TermsAndConditionComponent,
   },
   { path: 'contact', component: ContactUsComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'signup', component: SignUpComponent },
 ];
 
