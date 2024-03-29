@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
   DocumentData,
-  DocumentSnapshot,
   Firestore,
-  FirestoreError,
   Query,
   collection,
-  collectionData,
   doc,
-  getDoc,
   increment,
   limit,
   onSnapshot,
@@ -18,15 +14,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 
-import {
-  Observable,
-  Subscriber,
-  catchError,
-  finalize,
-  from,
-  map,
-  throwError,
-} from 'rxjs';
+import { Observable, Subscriber, catchError, from, throwError } from 'rxjs';
 
 import { Post } from '../models/post';
 import { Router } from '@angular/router';
