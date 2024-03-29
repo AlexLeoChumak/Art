@@ -1,13 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {
-  ActivatedRouteSnapshot,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, throwError } from 'rxjs';
-import { AuthGuard } from 'src/app/services/auth.guard';
+import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { InputService } from 'src/app/services/input.service';
 
@@ -17,8 +12,9 @@ import { InputService } from 'src/app/services/input.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  loginForm!: FormGroup<any>;
+  private unsubscribe$ = new Subject<void>();
   submitted: boolean = false;
+  loginForm!: FormGroup<any>;
 
   constructor(
     private authService: AuthService,
@@ -47,10 +43,14 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.authService
       .login(email, password)
-      .pipe(catchError((err) => throwError(() => err)))
+      .pipe(
+        catchError((err) => throwError(() => err)),
+        takeUntil(this.unsubscribe$)
+      )
       .subscribe({
         next: () => {
           this.router.navigate([this.inputService.getInputState()()[1]]);
+          this.inputService.setInputState([false, '']); //test
           this.toastr.success('Login successful');
           this.loginForm.reset();
           this.submitted = false;
@@ -62,5 +62,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       });
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }
