@@ -1,13 +1,41 @@
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
-import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
-import { catchError, from, tap, throwError } from 'rxjs';
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from '@angular/fire/auth';
+import { Firestore, addDoc, collection } from '@angular/fire/firestore';
+import { catchError, from, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private authFirebase: Auth) {}
+  constructor(private authFirebase: Auth, private fs: Firestore) {}
+
+  signUp(name: string, email: string, password: string) {
+    return from(
+      createUserWithEmailAndPassword(this.authFirebase, email, password)
+    ).pipe(
+      tap((responce) => {
+        this.setToken(responce);
+      }),
+      switchMap((responce) => {
+        const user = {
+          name,
+          email: responce.user.email,
+          id: responce.user.uid,
+        };
+
+        return addDoc(collection(this.fs, 'users'), user);
+      }),
+      catchError((err: FirebaseError) => {
+        console.error(`Error: ${err}`);
+        return throwError(() => err);
+      })
+    );
+  }
 
   login(email: string, password: string) {
     return from(
