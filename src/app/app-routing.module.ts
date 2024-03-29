@@ -6,15 +6,30 @@ import { SinglePostComponent } from './pages/single-post/single-post.component';
 import { TermsAndConditionComponent } from './pages/terms-and-condition/terms-and-condition.component';
 import { ContactUsComponent } from './pages/contact-us/contact-us.component';
 import { AboutUsComponent } from './pages/about-us/about-us.component';
+import { LoginComponent } from './auth/login/login.component';
+import { SignUpComponent } from './auth/sign-up/sign-up.component';
+import { AuthGuard } from './services/auth.guard';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'category/:category/:id', component: SingleCategoryComponent },
-  { path: 'post/:id', component: SinglePostComponent },
+  {
+    path: 'category/:category/:id',
+    component: SingleCategoryComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'post/:id',
+    component: SinglePostComponent,
+  },
 
   { path: 'about', component: AboutUsComponent },
-  { path: 'term-conditions', component: TermsAndConditionComponent },
+  {
+    path: 'term-conditions',
+    component: TermsAndConditionComponent,
+  },
   { path: 'contact', component: ContactUsComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignUpComponent },
 ];
 
 @NgModule({
