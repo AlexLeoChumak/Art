@@ -2,4 +2,14 @@
   <div class="container justify-content-center">
     <a class="site-logo" [routerLink]="['/']">ART PROJECT</a>
   </div>
+
+  <div class="justify-content-end">
+    <a href="#" class="mr-3">userEmail</a>
+    <button
+      class="btn btn-sm btn-info bg-secondary-theme text-theme-primary"
+      (click)="logout()"
+    >
+      Logout
+    </button>
+  </div>
 </header>
