@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription, catchError, throwError } from 'rxjs';
+import { Subscription, catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -10,8 +10,11 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-  getStorageSub!: Subscription;
-  logoutSub!: Subscription;
+  private getStorageSub!: Subscription;
+  private logoutSub!: Subscription;
+  private getUserDataSub!: Subscription;
+  user: any;
+  isAuth: any;
 
   constructor(
     private authService: AuthService,
@@ -19,7 +22,21 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.getUserDataSub = this.authService
+      .getUserData()
+      .pipe(
+        switchMap((user) => user),
+        catchError((err) => throwError(() => err))
+      )
+      .subscribe({
+        next: (user) => {
+          user ? (this.user = user) : null;
+          this.isAuth = this.authService.isAuthenticated();
+        },
+        error: (err) => console.error(err),
+      });
+  }
 
   logout() {
     this.logoutSub = this.authService
@@ -31,6 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: () => {
+          this.isAuth = this.authService.isAuthenticated();
           this.toastr.success('Logout successful');
           this.router.navigate(['/login']);
         },
@@ -41,6 +59,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.getUserDataSub ? this.getUserDataSub.unsubscribe() : null;
     this.getStorageSub ? this.getStorageSub.unsubscribe() : null;
+    this.logoutSub ? this.logoutSub.unsubscribe() : null;
   }
 }
