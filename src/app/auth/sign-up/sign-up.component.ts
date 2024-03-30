@@ -49,9 +49,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe({
-        next: (res) => {
-          console.log('7777', res);
-
+        next: () => {
           this.router.navigate(['/']);
           this.toastr.success('You have successfully registered');
           this.signUpForm.reset();

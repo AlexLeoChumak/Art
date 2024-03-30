@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -15,6 +15,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   submitted: boolean = false;
   loginForm!: FormGroup<any>;
+  userAuthState = signal({
+    name: '',
+    email: '',
+  });
 
   constructor(
     private authService: AuthService,
