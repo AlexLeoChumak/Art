@@ -18,6 +18,7 @@ import {
 } from 'rxjs';
 import { Comment } from 'src/app/models/comment';
 import { AuthGuard } from 'src/app/services/auth.guard';
+import { AuthService } from 'src/app/services/auth.service';
 import { CommentsService } from 'src/app/services/comments.service';
 import { InputService } from 'src/app/services/input.service';
 
@@ -30,9 +31,11 @@ export class CommentFormComponent implements OnInit, OnDestroy {
   private saveCommentSub!: Subscription;
   private loadCommentSub!: Subscription;
   private queryParamsSub!: Subscription;
+  private getUserDataSub!: Subscription;
   commentForm!: FormGroup;
   postId!: string;
   isVisibleReplyComments: boolean = false;
+  user!: any;
 
   @Input() idComment!: string;
 
@@ -42,7 +45,8 @@ export class CommentFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private inputService: InputService,
     private authGuard: AuthGuard,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +56,19 @@ export class CommentFormComponent implements OnInit, OnDestroy {
         Validators.minLength(3),
       ]),
     });
+
+    this.getUserDataSub = this.authService
+      .getUserData()
+      .pipe(
+        switchMap((user) => user),
+        catchError((err) => throwError(() => err))
+      )
+      .subscribe({
+        next: (user) => {
+          user ? (this.user = user) : null;
+        },
+        error: (err) => console.error(err),
+      });
   }
 
   submit() {
@@ -69,7 +86,7 @@ export class CommentFormComponent implements OnInit, OnDestroy {
               comment.replyComments.push({
                 comment: this.commentForm.value.comment,
                 createdAt: new Date().getTime(),
-                author: 'Vasya',
+                author: this.user.name,
               });
 
               return comment;
@@ -77,9 +94,13 @@ export class CommentFormComponent implements OnInit, OnDestroy {
           }),
           switchMap((data) =>
             this.commentsService.updateCommentToCollection(data.id, data)
-          )
+          ),
+          catchError((err) => throwError(() => err))
         )
-        .subscribe();
+        .subscribe({
+          next: () => console.log('Comment update successfully'),
+          error: () => console.error('Comment is not update'),
+        });
     } else {
       this.queryParamsSub = this.route.params
         .pipe(
@@ -98,6 +119,7 @@ export class CommentFormComponent implements OnInit, OnDestroy {
 
       const comment = {
         ...this.commentForm.value,
+        author: this.user.name,
         postId: this.postId,
         createdAt: new Date().getTime(),
         isVisibleReplyCommentForm: false,
@@ -145,5 +167,6 @@ export class CommentFormComponent implements OnInit, OnDestroy {
     this.saveCommentSub ? this.saveCommentSub.unsubscribe() : null;
     this.loadCommentSub ? this.loadCommentSub.unsubscribe() : null;
     this.queryParamsSub ? this.queryParamsSub.unsubscribe() : null;
+    this.getUserDataSub ? this.getUserDataSub.unsubscribe() : null;
   }
 }
