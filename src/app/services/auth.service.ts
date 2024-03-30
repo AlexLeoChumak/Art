@@ -1,12 +1,30 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import {
   Auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from '@angular/fire/auth';
-import { Firestore, addDoc, collection } from '@angular/fire/firestore';
-import { catchError, from, switchMap, tap, throwError } from 'rxjs';
+import {
+  Firestore,
+  addDoc,
+  collection,
+  collectionData,
+  doc,
+  docData,
+  query,
+  where,
+} from '@angular/fire/firestore';
+import {
+  Observable,
+  Subscriber,
+  catchError,
+  from,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +42,7 @@ export class AuthService {
       switchMap((responce) => {
         const user = {
           name,
+          password,
           email: responce.user.email,
           id: responce.user.uid,
         };
@@ -49,6 +68,36 @@ export class AuthService {
         return throwError(() => err);
       })
     );
+  }
+
+  getUserData() {
+    return new Observable((observer: Subscriber<any>) => {
+      this.authFirebase.onAuthStateChanged((user) => {
+        try {
+          if (user && user.uid) {
+            const userQuery = query(
+              collection(this.fs, 'users'),
+              where('id', '==', user.uid)
+            );
+
+            const userCollection = collectionData(userQuery);
+
+            observer.next(
+              userCollection.pipe(
+                switchMap((user) => user),
+                catchError((err: FirebaseError) => {
+                  console.error(`Error: ${err}`);
+                  return throwError(() => err);
+                })
+              )
+            );
+          }
+        } catch (err) {
+          console.error(`Error: ${err}`);
+          observer.error(err);
+        }
+      });
+    });
   }
 
   private setToken(responce: any) {
