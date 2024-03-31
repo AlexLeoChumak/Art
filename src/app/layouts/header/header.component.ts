@@ -25,10 +25,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getUserDataSub = this.authService
       .getUserData()
-      .pipe(
-        switchMap((user) => user),
-        catchError((err) => throwError(() => err))
-      )
+      .pipe(catchError((err) => throwError(() => err)))
       .subscribe({
         next: (user) => {
           user ? (this.user = user) : null;
