@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { catchError, throwError, takeUntil, Subject } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { InputService } from 'src/app/services/input.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -19,14 +18,20 @@ export class SignUpComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
-    private inputService: InputService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     this.signUpForm = new FormGroup({
-      name: new FormControl(null, [Validators.required]),
-      email: new FormControl(null, [Validators.required, Validators.email]),
+      name: new FormControl(null, [
+        Validators.required,
+        Validators.maxLength(25),
+      ]),
+      email: new FormControl(null, [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(25),
+      ]),
       password: new FormControl(null, [
         Validators.required,
         Validators.minLength(6),
