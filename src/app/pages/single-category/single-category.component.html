@@ -1,8 +1,8 @@
 <div class="bg-theme p-5">
   <div class="container">
-    <h1 class="text-white">{{ categoryDataFromParams["category"] }}</h1>
+    <h1 class="text-white mb-4">{{ categoryDataFromParams["category"] }}</h1>
     <p class="text-white">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      The category combines posts of a general theme or style
     </p>
   </div>
 </div>
@@ -12,5 +12,11 @@
     <div class="col-md-4 mb-3" *ngFor="let post of categoryPosts">
       <app-post-card [post]="post"></app-post-card>
     </div>
+  </div>
+</div>
+
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <app-subscription-form></app-subscription-form>
   </div>
 </div>
