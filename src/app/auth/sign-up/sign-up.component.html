@@ -17,6 +17,7 @@
                 type="text"
                 class="form-control"
                 placeholder="Name"
+                maxlength="26"
                 [ngClass]="{
                   'is-invalid':
                     signUpForm.get('name')?.touched &&
@@ -32,7 +33,10 @@
                 "
               >
                 <div *ngIf="signUpForm.get('name')?.errors?.['required']">
-                  name cannot be empty
+                  Name cannot be empty
+                </div>
+                <div *ngIf="signUpForm.get('name')?.errors?.['maxlength']">
+                  Name cannot be longer than 25 characters
                 </div>
               </div>
             </div>
@@ -43,6 +47,7 @@
                 type="email"
                 class="form-control"
                 placeholder="Email"
+                maxlength="26"
                 [ngClass]="{
                   'is-invalid':
                     signUpForm.get('email')?.touched &&
@@ -62,6 +67,9 @@
                 </div>
                 <div *ngIf="signUpForm.get('email')?.errors?.['email']">
                   Please enter a valid email address
+                </div>
+                <div *ngIf="signUpForm.get('email')?.errors?.['maxlength']">
+                  Email cannot be longer than 25 characters
                 </div>
               </div>
             </div>
@@ -100,11 +108,27 @@
               class="btn btn-info btn-block btn-theme"
               [disabled]="signUpForm.invalid || submitted"
             >
-              Login
+              Sign Up
             </button>
           </form>
         </div>
       </div>
+      <p class="d-flex justify-content-center mt-5">
+        <button
+          class="btn btn-info btn-block btn-theme btn-signup"
+          routerLink="/login"
+        >
+          Log in if you have an account
+        </button>
+      </p>
+      <p class="d-flex justify-content-center mt-1">
+        <button
+          class="btn btn-info btn-block btn-theme btn-signup"
+          routerLink="/"
+        >
+          Continue without registration
+        </button>
+      </p>
     </div>
     <div class="col-md-3"></div>
   </div>
