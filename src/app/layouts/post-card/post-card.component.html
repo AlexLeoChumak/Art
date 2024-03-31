@@ -2,21 +2,15 @@
   <img [src]="post.postImgUrl" [alt]="post.title" class="card-img-top" />
   <div class="card-body">
     <div>
-      <small class="bg-light text-danger text-center mr-2">{{
+      <small class="text-danger mr-2 element-three-string">{{
         post.category.category
       }}</small>
-      <small
-        *ngIf="post.isFeatured"
-        class="bg-light text-success text-center mr-2"
-        >Featured
-      </small>
-      <small class="bg-light text-info text-center"
-        >Views: {{ post.views }}</small
-      >
+      <small *ngIf="post.isFeatured" class="text-success mr-2">Featured </small>
+      <small class="text-info">Views: {{ post.views }}</small>
     </div>
 
-    <h5 class="mt-1">{{ post.title }}</h5>
-    <p class="element">
+    <h5 class="element-one-string mt-1">{{ post.title }}</h5>
+    <p class="element-three-string">
       {{ post.excerpt }}
     </p>
     <small class="bg-light text-info text-center">{{

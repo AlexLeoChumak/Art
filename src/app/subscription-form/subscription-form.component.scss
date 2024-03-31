@@ -1,7 +1,9 @@
 .card {
   background-color: var(--secondary-color);
   width: 1200px;
-
+  span {
+    margin: 0;
+  }
   .form-inline {
     display: flex;
     .form-control {
@@ -12,7 +14,6 @@
       margin: 0 auto;
     }
   }
-
   .subs-text {
     width: 500px;
   }

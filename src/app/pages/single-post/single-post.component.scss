@@ -5,4 +5,9 @@
     max-width: 700px;
     margin: 0 auto;
   }
+  .card-body {
+    small {
+      display: block;
+    }
+  }
 }
