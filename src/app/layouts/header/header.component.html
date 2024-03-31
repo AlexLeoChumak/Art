@@ -4,7 +4,7 @@
   <div class="container">
     <a class="site-logo" [routerLink]="['/']">ART PROJECT</a>
 
-    <div *ngIf="isAuth" class="d-flex justify-content-between">
+    <div *ngIf="isAuth; else login" class="d-flex justify-content-between">
       <p class="m-0 mr-3">
         <span>{{ user.name }}</span>
         <br />
@@ -17,5 +17,16 @@
         Logout
       </button>
     </div>
+
+    <ng-template #login>
+      <div>
+        <button
+          class="btn btn-info bg-secondary-theme text-theme-primary"
+          routerLink="/login"
+        >
+          Login
+        </button>
+      </div>
+    </ng-template>
   </div>
 </header>
