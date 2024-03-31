@@ -13,13 +13,13 @@
           }}</small>
           <small
             *ngIf="post.isFeatured"
-            class="bg-light text-success text-center ml-2"
+            class="bg-light text-success text-center"
             >Featured</small
           >
-          <small class="bg-light text-info text-center ml-2"
+          <small class="bg-light text-info text-center"
             >Views: {{ post.views }}</small
           >
-          <small class="bg-light text-warning text-center ml-2"
+          <small class="bg-light text-warning text-center"
             >LAST UPDATED: {{ post.createdAt | date }}</small
           >
 
@@ -38,5 +38,11 @@
         <app-post-card [post]="post"></app-post-card>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <app-subscription-form></app-subscription-form>
   </div>
 </div>
