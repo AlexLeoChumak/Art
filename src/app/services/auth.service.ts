@@ -20,8 +20,11 @@ import {
   Subscriber,
   catchError,
   from,
+  map,
+  mergeMap,
   of,
   switchMap,
+  take,
   tap,
   throwError,
 } from 'rxjs';
@@ -84,7 +87,7 @@ export class AuthService {
 
             observer.next(
               userCollection.pipe(
-                switchMap((user) => user),
+                map((users) => users[0]), // Извлекаем первый объект из массива
                 catchError((err: FirebaseError) => {
                   console.error(`Error: ${err}`);
                   return throwError(() => err);
@@ -97,7 +100,7 @@ export class AuthService {
           observer.error(err);
         }
       });
-    });
+    }).pipe(switchMap((userObservable) => userObservable));
   }
 
   private setToken(responce: any) {
@@ -106,8 +109,8 @@ export class AuthService {
         new Date().getTime() + +responce._tokenResponse.expiresIn * 1000
       );
 
-      localStorage.setItem('fb-token', responce._tokenResponse.idToken);
-      localStorage.setItem('fb-token-exp', expDate.toString());
+      localStorage.setItem('fb-token', btoa(responce._tokenResponse.idToken));
+      localStorage.setItem('fb-token-exp', btoa(expDate.toString()));
     } else {
       localStorage.clear();
     }
@@ -119,7 +122,7 @@ export class AuthService {
 
   get token(): any {
     const tokenExpiration = localStorage.getItem('fb-token-exp');
-    const expDate = tokenExpiration ? new Date(tokenExpiration) : null;
+    const expDate = tokenExpiration ? new Date(atob(tokenExpiration)) : null;
 
     if (!expDate || new Date() > expDate) {
       this.logout();
@@ -127,7 +130,7 @@ export class AuthService {
     }
 
     const token = localStorage.getItem('fb-token');
-    return token ? token : null;
+    return token ? atob(token) : null;
   }
 
   logout() {
