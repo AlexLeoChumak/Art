@@ -3,9 +3,12 @@
     <div class="text-center mt-3 mb-3">
       <h3>SUBSCRIPTION FORM</h3>
       <p class="m-auto subs-text">
-        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ab molestiae,
-        est ipsum ea earum totam quae voluptates perspiciatis odit neque nihil
-        error quo ullam dignissimos fuga maxime cumque aperiam expedita.
+        Are you looking for fresh ideas, inspiring stories and unique
+        perspectives? Subscribe to our new posts! We promise that every post
+        will stimulate your thinking and expand your horizons. Don't miss the
+        opportunity to stay up to date with the latest news and trends. Your
+        opinion is important to us and we look forward to sharing our ideas with
+        you. Subscribe today!
       </p>
 
       <form
@@ -35,6 +38,7 @@
             />
 
             <div
+              class="alert alert-danger w-100 text-left"
               *ngIf="
                 subscriptionForm.get('name')?.touched &&
                 subscriptionForm.get('name')?.invalid
@@ -66,6 +70,7 @@
             />
 
             <div
+              class="alert alert-danger w-100 text-left"
               *ngIf="
                 subscriptionForm.get('email')?.touched &&
                 subscriptionForm.get('email')?.invalid
