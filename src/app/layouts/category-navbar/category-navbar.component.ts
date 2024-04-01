@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription, catchError, throwError } from 'rxjs';
 import { Category } from 'src/app/models/category';
+import { AuthService } from 'src/app/services/auth.service';
 import { CategoriesService } from 'src/app/services/categories.service';
 
 @Component({
@@ -10,12 +11,15 @@ import { CategoriesService } from 'src/app/services/categories.service';
   styleUrls: ['./category-navbar.component.scss'],
 })
 export class CategoryNavbarComponent implements OnInit, OnDestroy {
+  private loadDataSub!: Subscription;
+  private isAuthenticatedObservableSub!: Subscription;
   categoryArray!: Category[];
-  loadDataSub!: Subscription;
+  isAuth!: unknown;
 
   constructor(
     private categoriesService: CategoriesService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -34,9 +38,26 @@ export class CategoryNavbarComponent implements OnInit, OnDestroy {
           this.toastr.error(err);
         },
       });
+
+    this.isAuthenticatedObservableSub = this.authService
+      .isAuthenticatedObservable()
+      .pipe(
+        catchError((err) => {
+          return throwError(() => err);
+        })
+      )
+      .subscribe({
+        next: (isAuth) => {
+          this.isAuth = isAuth;
+        },
+        error: (err) => console.error(err),
+      });
   }
 
   ngOnDestroy(): void {
     this.loadDataSub ? this.loadDataSub.unsubscribe() : null;
+    this.isAuthenticatedObservableSub
+      ? this.isAuthenticatedObservableSub.unsubscribe()
+      : null;
   }
 }
