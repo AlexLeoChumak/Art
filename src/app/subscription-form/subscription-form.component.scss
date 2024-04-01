@@ -1,14 +1,19 @@
 .card {
   background-color: var(--secondary-color);
-  width: 1200px;
+  max-width: 1200px;
   span {
     margin: 0;
   }
   .form-inline {
     display: flex;
+    justify-content: center;
     .form-control {
       width: 100%;
       align-self: flex-start;
+      margin: 0 0 15px;
+    }
+    .alert {
+      margin-top: -15px;
     }
     .btn-info {
       margin: 0 auto;
@@ -16,5 +21,30 @@
   }
   .subs-text {
     width: 500px;
+  }
+}
+
+@media (max-width: 1330px) {
+  .form-inputs {
+    flex-direction: column;
+    align-items: center;
+  }
+  .card {
+    width: 100%;
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 770px) {
+  .card .subs-text {
+    width: 100%;
+  }
+}
+@media (max-width: 575px) {
+  .card .form-inline {
+    padding: 0;
+  }
+  .form-inputs {
+    padding: 0;
   }
 }

@@ -1,4 +1,13 @@
 footer {
-  padding: 25px 15px 15px;
+  padding: 15px;
   background-color: var(--navbar-footer-color);
+}
+
+@media (max-width: 575px) {
+  .nav {
+    flex-direction: column;
+  }
+  .site-logo {
+    display: none;
+  }
 }

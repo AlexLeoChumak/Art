@@ -1,7 +1,15 @@
 .card {
   border-radius: 5px;
+  margin-bottom: 20px;
   .btn {
     width: 200px;
+    height: 45px;
+  }
+}
+
+@media (max-width: 500px) {
+  .card .btn {
+    width: auto;
     height: 45px;
   }
 }

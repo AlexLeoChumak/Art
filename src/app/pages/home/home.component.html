@@ -5,16 +5,15 @@
         <div class="col-md-12 text-center mt-5 mb-3">
           <h2 class="text-white">Featured Posts</h2>
           <p class="text-white">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit rerum
-            nulla animi, voluptatibus iusto exercitationem! Dolore aut corporis
-            facilis, vero beatae quos quae corrupti hic voluptatum officiis!
-            Ullam, iure corporis.
+            Featured posts are your collection of impressions. They can inspire
+            your creativity, teach you something new, or simply add a splash of
+            color to your day.
           </p>
         </div>
       </div>
 
       <div class="row">
-        <div class="col-lg-3" *ngFor="let post of featuredPosts">
+        <div class="col-lg-3 one-post" *ngFor="let post of featuredPosts">
           <app-post-card [post]="post"></app-post-card>
         </div>
         <div
@@ -31,9 +30,7 @@
 <section class="container mt-5">
   <div class="col-md-12 text-center">
     <h2>Latest Posts</h2>
-    <p class="text-white">
-      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-    </p>
+    <p>The latest posts are waiting for you here right now</p>
   </div>
 
   <div class="row">
@@ -51,7 +48,7 @@
 </section>
 
 <div class="container mt-5 mb-5">
-  <div class="row justify-content-center">
-    <app-subscription-form></app-subscription-form>
+  <div class="row ml-3 mr-3 justify-content-center">
+    <app-subscription-form class="w-100"></app-subscription-form>
   </div>
 </div>

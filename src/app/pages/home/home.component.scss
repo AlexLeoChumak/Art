@@ -12,8 +12,16 @@
     padding: 0 50px 30px;
   }
 }
+
 @media (max-width: 635px) {
   .featured-section {
-    padding: 30px 0;
+    padding: 0 0 30px;
+  }
+  .one-post {
+    padding: 0;
+  }
+  .row:last-of-type {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
 }
