@@ -16,6 +16,7 @@ import {
   where,
 } from '@angular/fire/firestore';
 import {
+  BehaviorSubject,
   Observable,
   Subscriber,
   catchError,
@@ -117,7 +118,27 @@ export class AuthService {
   }
 
   isAuthenticated() {
+    //для сервисов, гвардов
     return !!this.token;
+  }
+
+  isAuthenticatedObservable() {
+    // для компонентов
+    return new Observable((observer) => {
+      this.authFirebase.onAuthStateChanged(
+        (user) => {
+          if (user) {
+            observer.next(true);
+          } else {
+            observer.next(false);
+          }
+        },
+        (error) => {
+          console.error(error);
+          observer.next(false);
+        }
+      );
+    });
   }
 
   get token(): any {
