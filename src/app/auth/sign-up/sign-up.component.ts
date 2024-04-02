@@ -14,6 +14,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   submitted: boolean = false;
   signUpForm!: FormGroup<any>;
+  isLoading!: boolean;
 
   constructor(
     private authService: AuthService,
@@ -44,6 +45,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.isLoading = true;
     this.submitted = true;
     const { name, email, password } = this.signUpForm.value;
 
@@ -59,10 +61,12 @@ export class SignUpComponent implements OnInit, OnDestroy {
           this.toastr.success('You have successfully registered');
           this.signUpForm.reset();
           this.submitted = false;
+          this.isLoading = false;
         },
         error: (err) => {
           this.toastr.error(err);
           this.submitted = false;
+          this.isLoading = false;
         },
       });
   }

@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   allPosts!: Post[];
   featuredPosts!: Post[];
   latestPosts!: Post[];
+  isLoading: boolean = true;
 
   constructor(
     private postsService: PostsService,
@@ -33,9 +34,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.featuredPosts = data;
+          this.isLoading = false;
         },
         error: (err) => {
           this.toastr.error(err);
+          this.isLoading = false;
         },
       });
 
@@ -49,19 +52,17 @@ export class HomeComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.latestPosts = data;
+          this.isLoading = false;
         },
         error: (err) => {
           this.toastr.error(err);
+          this.isLoading = false;
         },
       });
   }
 
   ngOnDestroy(): void {
-    if (this.loadFeaturedPostsSub) {
-      this.loadFeaturedPostsSub.unsubscribe();
-    }
-    if (this.loadLatestPostsSub) {
-      this.loadLatestPostsSub.unsubscribe();
-    }
+    this.loadFeaturedPostsSub ? this.loadFeaturedPostsSub.unsubscribe() : null;
+    this.loadLatestPostsSub ? this.loadLatestPostsSub.unsubscribe() : null;
   }
 }

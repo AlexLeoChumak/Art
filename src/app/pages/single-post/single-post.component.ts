@@ -24,6 +24,7 @@ export class SinglePostComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   post!: DocumentData | Post;
   similarPosts!: Post[];
+  isLoading: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -52,9 +53,11 @@ export class SinglePostComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.similarPosts = data;
+          this.isLoading = false;
         },
         error: (err) => {
           this.toastr.error(err);
+          this.isLoading = false;
         },
       });
   }

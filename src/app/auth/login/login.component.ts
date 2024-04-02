@@ -15,6 +15,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
   submitted: boolean = false;
   loginForm!: FormGroup<any>;
+  isLoading!: boolean;
+
   userAuthState = signal({
     name: '',
     email: '',
@@ -42,6 +44,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.isLoading = true;
     this.submitted = true;
     const { email, password } = this.loginForm.value;
 
@@ -58,10 +61,12 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.toastr.success('Login successful');
           this.loginForm.reset();
           this.submitted = false;
+          this.isLoading = false;
         },
         error: (err) => {
           this.toastr.error(err);
           this.submitted = false;
+          this.isLoading = false;
         },
       });
   }
