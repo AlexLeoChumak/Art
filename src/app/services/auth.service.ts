@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import {
   Auth,
@@ -6,26 +6,23 @@ import {
   signInWithEmailAndPassword,
 } from '@angular/fire/auth';
 import {
+  DocumentData,
   Firestore,
   addDoc,
   collection,
   collectionData,
   doc,
-  docData,
   query,
+  setDoc,
   where,
 } from '@angular/fire/firestore';
 import {
-  BehaviorSubject,
   Observable,
   Subscriber,
   catchError,
   from,
   map,
-  mergeMap,
-  of,
   switchMap,
-  take,
   tap,
   throwError,
 } from 'rxjs';
@@ -37,6 +34,17 @@ export class AuthService {
   constructor(private authFirebase: Auth, private fs: Firestore) {}
 
   signUp(name: string, email: string, password: string) {
+    let user = {
+      name,
+      email,
+      password,
+      id: '',
+      uid: '',
+    };
+
+    const docRef = doc(collection(this.fs, 'users'));
+    user.id = docRef.id;
+
     return from(
       createUserWithEmailAndPassword(this.authFirebase, email, password)
     ).pipe(
@@ -44,14 +52,9 @@ export class AuthService {
         this.setToken(responce);
       }),
       switchMap((responce) => {
-        const user = {
-          name,
-          password,
-          email: responce.user.email,
-          id: responce.user.uid,
-        };
+        user.uid = responce.user.uid;
 
-        return addDoc(collection(this.fs, 'users'), user);
+        return setDoc(docRef, user);
       }),
       catchError((err: FirebaseError) => {
         console.error(`Error: ${err}`);
@@ -74,14 +77,14 @@ export class AuthService {
     );
   }
 
-  getUserData() {
+  getUserData(): Observable<any> {
     return new Observable((observer: Subscriber<any>) => {
       this.authFirebase.onAuthStateChanged((user) => {
         try {
           if (user && user.uid) {
             const userQuery = query(
               collection(this.fs, 'users'),
-              where('id', '==', user.uid)
+              where('uid', '==', user.uid)
             );
 
             const userCollection = collectionData(userQuery);
