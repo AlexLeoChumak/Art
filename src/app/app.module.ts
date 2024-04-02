@@ -27,6 +27,8 @@ import { environment } from 'src/environments/environment.prod';
 import { LoginComponent } from './auth/login/login.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { PreloaderComponent } from './preloader/preloader.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
     PostCardComponent,
     LoginComponent,
     SignUpComponent,
+    PreloaderComponent,
+    PageNotFoundComponent,
   ],
   imports: [
     BrowserModule,
