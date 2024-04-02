@@ -10,6 +10,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { SignUpComponent } from './auth/sign-up/sign-up.component';
 import { AuthGuard } from './services/auth.guard';
 import { SignUpLoginGuard } from './services/login.guard';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -35,6 +36,7 @@ const routes: Routes = [
     component: SignUpComponent,
     canActivate: [SignUpLoginGuard],
   },
+  { path: '**', component: PageNotFoundComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
