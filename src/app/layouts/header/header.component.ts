@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription, catchError, throwError } from 'rxjs';
+import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -13,8 +14,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private getStorageSub!: Subscription;
   private logoutSub!: Subscription;
   private getUserDataSub!: Subscription;
-  user: any;
-  isAuth: any;
+  user!: User;
+  isAuth!: boolean;
 
   constructor(
     private authService: AuthService,
