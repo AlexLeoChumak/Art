@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   submitted: boolean = false;
   loginForm!: FormGroup<any>;
   isLoading!: boolean;
+  isVisibilityPassword: boolean = false;
 
   userAuthState = signal({
     name: '',

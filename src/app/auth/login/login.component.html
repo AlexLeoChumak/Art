@@ -42,8 +42,8 @@
             <div class="form-group">
               <input
                 formControlName="password"
-                type="password"
-                class="form-control"
+                [type]="isVisibilityPassword ? 'text' : 'password'"
+                class="form-control password"
                 placeholder="Password"
                 [ngClass]="{
                   'is-invalid':
@@ -51,6 +51,16 @@
                     loginForm.get('password')?.invalid
                 }"
               />
+              <i
+                class="fa fa-eye"
+                *ngIf="!isVisibilityPassword"
+                (click)="isVisibilityPassword = !isVisibilityPassword"
+              ></i>
+              <i
+                class="fa fa-eye-slash"
+                *ngIf="isVisibilityPassword"
+                (click)="isVisibilityPassword = !isVisibilityPassword"
+              ></i>
 
               <div
                 class="alert alert-danger"

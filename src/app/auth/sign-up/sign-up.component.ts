@@ -15,6 +15,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
   submitted: boolean = false;
   signUpForm!: FormGroup<any>;
   isLoading!: boolean;
+  isVisibilityPassword: boolean = false;
 
   constructor(
     private authService: AuthService,
