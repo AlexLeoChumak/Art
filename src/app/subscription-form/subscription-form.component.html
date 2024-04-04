@@ -86,7 +86,7 @@
           </div>
 
           <button
-            [disabled]="subscriptionForm.invalid"
+            [disabled]="subscriptionForm.invalid || submitted"
             class="btn btn-info btn-block btn-theme"
             type="submit"
           >

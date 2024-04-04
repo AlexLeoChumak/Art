@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription, catchError, throwError } from 'rxjs';
+import { DocumentReference } from '@angular/fire/firestore';
+import { ToastrService } from 'ngx-toastr';
+
 import { UpdateSubscriber } from '../models/update-subscriber';
 import { SubscribersService } from '../services/subscribers.service';
-import { Subscription, catchError, switchMap, tap, throwError } from 'rxjs';
-import { ToastrService } from 'ngx-toastr';
-import { DocumentReference } from '@angular/fire/firestore';
 import { AuthService } from '../services/auth.service';
-import { User } from '../models/user';
 
 @Component({
   selector: 'app-subscription-form',
@@ -17,6 +17,7 @@ export class SubscriptionFormComponent implements OnInit, OnDestroy {
   private addSubscriberSub!: Subscription;
   private getUserDataSub!: Subscription;
   subscriptionForm!: FormGroup;
+  submitted: boolean = false;
 
   constructor(
     private subscribersService: SubscribersService,
@@ -53,6 +54,7 @@ export class SubscriptionFormComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.submitted = true;
     const subscriptionFormData: UpdateSubscriber = {
       ...this.subscriptionForm.value,
     };
@@ -63,6 +65,7 @@ export class SubscriptionFormComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.subscriptionForm.reset();
+          this.submitted = false;
 
           if (data instanceof DocumentReference) {
             this.toastr.success('You have successfully subscribed to updates');
@@ -70,7 +73,10 @@ export class SubscriptionFormComponent implements OnInit, OnDestroy {
             this.toastr.warning(data);
           }
         },
-        error: (err) => this.toastr.error(err),
+
+        error: (err) => {
+          this.toastr.error(err), (this.submitted = false);
+        },
       });
   }
 
