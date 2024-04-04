@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe({
-        next: (data) => {
+        next: (data: Post[]) => {
           this.featuredPosts = data;
           this.isLoading = false;
         },
@@ -50,7 +50,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe({
-        next: (data) => {
+        next: (data: Post[]) => {
           this.latestPosts = data;
           this.isLoading = false;
         },
