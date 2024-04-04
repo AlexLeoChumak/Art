@@ -13,11 +13,10 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-
+import { Router } from '@angular/router';
 import { Observable, Subscriber, catchError, from, throwError } from 'rxjs';
 
 import { Post } from '../models/post';
-import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -132,6 +131,7 @@ export class PostsService {
     return from(updateDoc(doc(this.postsCollection, postId), viewCount)).pipe(
       catchError((err) => {
         console.error(`Error: ${err}`);
+        this.router.navigate(['**']);
         return throwError(() => `Data update error. Please try again`);
       })
     );

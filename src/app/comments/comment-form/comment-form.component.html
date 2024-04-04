@@ -26,6 +26,7 @@
         ></textarea>
 
         <div
+          class="alert alert-danger w-100 text-left"
           *ngIf="
             commentForm.get('comment')?.touched &&
             commentForm.get('comment')?.invalid

@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject, catchError, takeUntil, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { Subject, Subscription, catchError, takeUntil, throwError } from 'rxjs';
+
 import { AuthService } from 'src/app/services/auth.service';
 import { InputService } from 'src/app/services/input.service';
 
@@ -47,6 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     this.submitted = true;
+
     const { email, password } = this.loginForm.value;
 
     this.authService
@@ -58,7 +60,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       .subscribe({
         next: () => {
           this.router.navigate([this.inputService.getInputState()()[1]]);
-          this.inputService.setInputState([false, '']); //test
+          this.inputService.setInputState([false, '']);
           this.toastr.success('Login successful');
           this.loginForm.reset();
           this.submitted = false;

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription, catchError, throwError } from 'rxjs';
+
 import { Category } from 'src/app/models/category';
 import { AuthService } from 'src/app/services/auth.service';
 import { CategoriesService } from 'src/app/services/categories.service';
@@ -14,7 +15,7 @@ export class CategoryNavbarComponent implements OnInit, OnDestroy {
   private loadDataSub!: Subscription;
   private isAuthenticatedObservableSub!: Subscription;
   categoryArray!: Category[];
-  isAuth!: unknown;
+  isAuth!: any;
 
   constructor(
     private categoriesService: CategoriesService,
@@ -31,7 +32,7 @@ export class CategoryNavbarComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe({
-        next: (data) => {
+        next: (data: Category[]) => {
           data ? (this.categoryArray = data) : null;
         },
         error: (err) => {
