@@ -5,6 +5,7 @@ import { Subscription, catchError, throwError } from 'rxjs';
 
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +22,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private storageService: StorageService
   ) {}
 
   ngOnInit(): void {
@@ -29,12 +31,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .getUserData()
       .pipe(catchError((err) => throwError(() => err)))
       .subscribe({
-        next: (user) => {
-          user ? (this.user = user) : null;
+        next: (user: User) => {
+          this.user = user;
           this.isAuth = this.authService.isAuthenticated();
         },
         error: (err) => console.error(err),
       });
+
+    this.getStorageSub = this.storageService.getStorage().subscribe((res) => {
+      res ? this.logout() : null;
+    });
   }
 
   logout() {
