@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, catchError, switchMap, takeUntil, throwError } from 'rxjs';
+
 import { Post } from 'src/app/models/post';
 import { PostsService } from 'src/app/services/posts.service';
 
@@ -18,6 +19,7 @@ export class SingleCategoryComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private postsService: PostsService,
     private toastr: ToastrService
   ) {}
@@ -35,8 +37,11 @@ export class SingleCategoryComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe({
-        next: (data) => {
-          this.categoryPosts = data;
+        next: (data: Post[]) => {
+          data.length
+            ? (this.categoryPosts = data)
+            : this.router.navigate(['**']);
+
           this.isLoading = false;
         },
         error: (err) => {

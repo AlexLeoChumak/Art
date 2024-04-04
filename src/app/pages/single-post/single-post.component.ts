@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DocumentData } from '@angular/fire/firestore';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import {
   Subject,
@@ -12,6 +12,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+
 import { Post } from 'src/app/models/post';
 import { PostsService } from 'src/app/services/posts.service';
 
@@ -29,7 +30,8 @@ export class SinglePostComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private postsService: PostsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -42,7 +44,7 @@ export class SinglePostComponent implements OnInit, OnDestroy {
         ),
         switchMap((id) => this.postsService.loadPostById(id)),
         tap((post) => {
-          this.post = post;
+          post ? (this.post = post) : this.router.navigate(['/**']);
         }),
         switchMap((post) =>
           this.postsService.loadSimilarPosts(post['category'].categoryId)
@@ -51,7 +53,7 @@ export class SinglePostComponent implements OnInit, OnDestroy {
         takeUntil(this.unsubscribe$)
       )
       .subscribe({
-        next: (data) => {
+        next: (data: Post[]) => {
           this.similarPosts = data;
           this.isLoading = false;
         },
