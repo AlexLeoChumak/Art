@@ -6,9 +6,7 @@ import {
   signInWithEmailAndPassword,
 } from '@angular/fire/auth';
 import {
-  DocumentData,
   Firestore,
-  addDoc,
   collection,
   collectionData,
   doc,
@@ -26,6 +24,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +33,7 @@ export class AuthService {
   constructor(private authFirebase: Auth, private fs: Firestore) {}
 
   signUp(name: string, email: string, password: string) {
-    let user = {
+    let user: User = {
       name,
       email,
       password,
@@ -91,7 +90,7 @@ export class AuthService {
 
             observer.next(
               userCollection.pipe(
-                map((users) => users[0]), // Извлекаем первый объект из массива
+                map((users) => users[0]),
                 catchError((err: FirebaseError) => {
                   console.error(`Error: ${err}`);
                   return throwError(() => err);
