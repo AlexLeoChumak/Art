@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { catchError, throwError, takeUntil, Subject } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
