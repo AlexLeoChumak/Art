@@ -12,13 +12,9 @@ export class StorageService {
     this.isMobile = this.checkIsMobile();
 
     if (!this.isMobile) {
-      navigator.vibrate(2000);
-
       window.addEventListener('storage', (event) =>
         this.onStorageChange(event)
       );
-    } else {
-      navigator.vibrate(10000);
     }
   }
 
