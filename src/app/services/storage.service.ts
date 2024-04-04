@@ -6,9 +6,20 @@ import { Observable, Subject } from 'rxjs';
 })
 export class StorageService {
   private storageSub$: Subject<boolean> = new Subject<boolean>();
+  private isMobile!: boolean;
 
   constructor(private ngZone: NgZone) {
-    window.addEventListener('storage', (event) => this.onStorageChange(event));
+    this.isMobile = this.checkIsMobile();
+
+    if (!this.isMobile) {
+      navigator.vibrate(2000);
+
+      window.addEventListener('storage', (event) =>
+        this.onStorageChange(event)
+      );
+    } else {
+      navigator.vibrate(10000);
+    }
   }
 
   getStorage(): Observable<boolean> {
@@ -19,5 +30,13 @@ export class StorageService {
     if (event.storageArea?.length === 0 || event.key === 'fb-token-exp') {
       this.ngZone.run(() => this.storageSub$.next(true));
     }
+  }
+
+  private checkIsMobile(): boolean {
+    // Проверка на мобильное устройство по user agent
+    const userAgent = navigator.userAgent.toLowerCase();
+    return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+      userAgent
+    );
   }
 }
