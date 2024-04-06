@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
-import { Subscription, catchError, throwError } from 'rxjs';
+import { Subscription, catchError, switchMap, throwError } from 'rxjs';
 
 import { Category } from 'src/app/models/category';
 import { AuthService } from 'src/app/services/auth.service';
 import { CategoriesService } from 'src/app/services/categories.service';
+import { MocDataService } from 'src/app/services/moc-data.service';
 
 @Component({
   selector: 'app-category-navbar',
@@ -20,7 +21,8 @@ export class CategoryNavbarComponent implements OnInit, OnDestroy {
   constructor(
     private categoriesService: CategoriesService,
     private toastr: ToastrService,
-    private authService: AuthService
+    private authService: AuthService,
+    private mocDataService: MocDataService //moc
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +38,7 @@ export class CategoryNavbarComponent implements OnInit, OnDestroy {
           data ? (this.categoryArray = data) : null;
         },
         error: (err) => {
+          this.categoryArray = this.mocDataService.categories; //moc
           this.toastr.error(err);
         },
       });
@@ -51,7 +54,9 @@ export class CategoryNavbarComponent implements OnInit, OnDestroy {
         next: (isAuth) => {
           this.isAuth = isAuth;
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+        },
       });
   }
 

@@ -111,9 +111,7 @@ export class PostsService {
         },
         (error) => {
           console.error(`Error: ${error}`);
-          observer.error(
-            'An error occurred while loading data. Please try again'
-          );
+          observer.error(error);
         }
       );
 
@@ -132,7 +130,7 @@ export class PostsService {
       catchError((err) => {
         console.error(`Error: ${err}`);
         this.router.navigate(['**']);
-        return throwError(() => `Data update error. Please try again`);
+        return throwError(() => err);
       })
     );
   }

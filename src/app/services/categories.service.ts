@@ -23,9 +23,7 @@ export class CategoriesService {
         },
         (error) => {
           console.error(`Error: ${error}`);
-          observer.error(
-            'An error occurred while loading data. Please try again'
-          );
+          observer.error(error);
         }
       );
 

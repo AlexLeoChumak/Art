@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription, catchError, throwError } from 'rxjs';
+import { Subscription, catchError, switchMap, throwError } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
 import { PostsService } from 'src/app/services/posts.service';
 import { Post } from 'src/app/models/post';
+import { MocDataService } from 'src/app/services/moc-data.service';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +21,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private postsService: PostsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private mocDataService: MocDataService //moc
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (err) => {
+          this.featuredPosts = this.mocDataService.posts; //moc
           this.toastr.error(err);
           this.isLoading = false;
         },
@@ -54,8 +57,8 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.latestPosts = data;
           this.isLoading = false;
         },
-        error: (err) => {
-          this.toastr.error(err);
+        error: () => {
+          this.latestPosts = this.mocDataService.posts; //moc
           this.isLoading = false;
         },
       });

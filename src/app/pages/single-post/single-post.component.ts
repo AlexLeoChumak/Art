@@ -14,6 +14,7 @@ import {
 } from 'rxjs';
 
 import { Post } from 'src/app/models/post';
+import { MocDataService } from 'src/app/services/moc-data.service';
 import { PostsService } from 'src/app/services/posts.service';
 
 @Component({
@@ -31,7 +32,8 @@ export class SinglePostComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private postsService: PostsService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private mocDataService: MocDataService //moc
   ) {}
 
   ngOnInit(): void {
@@ -58,6 +60,8 @@ export class SinglePostComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (err) => {
+          this.post = this.mocDataService.posts[0]; //moc
+          this.similarPosts = this.mocDataService.posts; //moc
           this.toastr.error(err);
           this.isLoading = false;
         },

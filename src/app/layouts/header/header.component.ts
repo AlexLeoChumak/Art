@@ -18,7 +18,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private getUserDataSub!: Subscription;
   user!: User;
   isAuth!: boolean;
-
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,

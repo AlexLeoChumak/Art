@@ -45,7 +45,8 @@ export class SingleCategoryComponent implements OnInit, OnDestroy {
           this.isLoading = false;
         },
         error: (err) => {
-          this.toastr.error(err), (this.isLoading = false);
+          this.toastr.error(err);
+          this.isLoading = false;
         },
       });
   }

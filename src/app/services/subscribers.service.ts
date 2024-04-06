@@ -37,7 +37,7 @@ export class SubscribersService {
           return from(addDoc(this.subscribersCollection, data)).pipe(
             catchError((err) => {
               console.error(`Error: ${err}`);
-              return throwError(() => `Data insert error. Please try again`);
+              return throwError(() => err);
             })
           );
         } else {
